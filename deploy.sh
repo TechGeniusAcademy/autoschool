@@ -16,7 +16,7 @@ REPO_URL="https://github.com/TechGeniusAcademy/autoschool.git"
 BRANCH="main"
 PM2_SERVER="autoschool-server"
 PM2_CLIENT="autoschool-client"
-LOG_FILE="/var/log/autoschool-deploy.log"
+LOG_FILE="/var/www/autoschool/deploy.log"
 # ─────────────────────────────────────────────────────────────
 
 RED='\033[0;31m'
