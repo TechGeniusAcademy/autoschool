@@ -4,7 +4,6 @@ import Layout from "../../../../components/layout/Layout";
 import TokenStorage from "../../../../utils/tokenStorage";
 import { API_BASE_URL } from "../../../../constants/api";
 import { ArrowLeft, Save, Eye, AlertCircle } from "lucide-react";
-import { API_BASE_URL } from "@/constants/api";
 
 interface LessonFormData {
   title: string;
