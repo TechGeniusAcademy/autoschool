@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaCar, FaGraduationCap, FaUsers, FaCheck, FaPhone, FaMapMarkerAlt, FaClock, FaShieldAlt, FaWhatsapp, FaTimes } from "react-icons/fa";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { API_BASE_URL, SERVER_URL } from "@/constants/api";
 
 interface Review {
   id: number;
@@ -76,7 +77,7 @@ export default function Home() {
         params.append("sort", "highest"); // Сортируем по наивысшему рейтингу
         params.append("rating", "5"); // Фильтруем только 5-звездочные отзывы
 
-        const url = `http://localhost:3001/api/reviews/public?${params.toString()}`;
+        const url = `${API_BASE_URL}/reviews/public?${params.toString()}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -101,7 +102,7 @@ export default function Home() {
     const fetchCourses = async () => {
       try {
         console.log("Fetching courses from API...");
-        const response = await fetch(`http://localhost:3001/api/courses/public?limit=8`);
+        const response = await fetch(`${API_BASE_URL}/courses/public?limit=8`);
         const data = await response.json();
 
         if (data.success) {
@@ -365,7 +366,7 @@ export default function Home() {
               reviews.map((review) => (
                 <div key={review.id} className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">{review.avatar_url ? <img src={`http://localhost:3001${review.avatar_url}`} alt={review.display_name || review.author_name || "Пользователь"} className="w-12 h-12 rounded-full object-cover" /> : <span className="text-gray-500 text-xl">👤</span>}</div>
+                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">{review.avatar_url ? <img src={`${SERVER_URL}${review.avatar_url}`} alt={review.display_name || review.author_name || "Пользователь"} className="w-12 h-12 rounded-full object-cover" /> : <span className="text-gray-500 text-xl">👤</span>}</div>
                     <div>
                       <h4 className="font-bold text-lg">{review.display_name || review.author_name || "Анонимный пользователь"}</h4>
                       <p className="text-gray-600 text-sm">

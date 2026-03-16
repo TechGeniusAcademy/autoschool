@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout/Layout";
 import TokenStorage from "../../../utils/tokenStorage";
 import { Plus, Search, Filter, Book, Users, Clock, Edit, Trash2, Eye } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Course {
   id: number;
@@ -59,7 +60,7 @@ const CoursesManagement: React.FC = () => {
       if (categoryFilter) params.append("category", categoryFilter);
       if (difficultyFilter) params.append("difficulty", difficultyFilter);
 
-      const response = await fetch(`http://localhost:3001/api/courses?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/courses?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -94,7 +95,7 @@ const CoursesManagement: React.FC = () => {
   const handleDeleteCourse = async (courseId: number, courseTitle: string) => {
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch(`http://localhost:3001/api/courses/${courseId}`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

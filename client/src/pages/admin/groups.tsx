@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/layout/Layout";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Student {
   id: number;
@@ -54,7 +55,7 @@ const GroupsManagement = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/verify", {
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -72,7 +73,7 @@ const GroupsManagement = () => {
   const loadGroups = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/admin/groups", {
+      const response = await fetch(`${API_BASE_URL}/admin/groups`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -94,7 +95,7 @@ const GroupsManagement = () => {
   const loadStudents = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/admin/students", {
+      const response = await fetch(`${API_BASE_URL}/admin/students`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -113,7 +114,7 @@ const GroupsManagement = () => {
 
   const loadInstructors = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/instructor/list");
+      const response = await fetch(`${API_BASE_URL}/instructor/list`);
       const data = await response.json();
 
       if (data.success && Array.isArray(data.data)) {
@@ -131,7 +132,7 @@ const GroupsManagement = () => {
   const loadGroupDetails = async (groupId: number) => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${groupId}/details`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${groupId}/details`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -150,7 +151,7 @@ const GroupsManagement = () => {
   const createGroup = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/admin/groups", {
+      const response = await fetch(`${API_BASE_URL}/admin/groups`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -181,7 +182,7 @@ const GroupsManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${selectedGroup.id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${selectedGroup.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -213,7 +214,7 @@ const GroupsManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${groupId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${groupId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -238,7 +239,7 @@ const GroupsManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${selectedGroup.id}/students`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${selectedGroup.id}/students`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -267,7 +268,7 @@ const GroupsManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${selectedGroup.id}/students/${studentId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${selectedGroup.id}/students/${studentId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

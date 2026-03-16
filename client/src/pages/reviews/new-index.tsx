@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FaStar, FaThumbsUp, FaComment, FaFilter, FaSortAmountDown, FaUser, FaCheckCircle } from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { API_BASE_URL, SERVER_URL } from "@/constants/api";
 
 interface Review {
   id: number;
@@ -53,7 +54,7 @@ const ReviewsPage: React.FC = () => {
         params.append("rating", filterRating.toString());
       }
 
-      const response = await fetch(`http://localhost:3001/api/reviews/public?${params.toString()}`);
+      const response = await fetch(`${API_BASE_URL}/reviews/public?${params.toString()}`);
       const data = await response.json();
 
       if (data.success) {
@@ -76,7 +77,7 @@ const ReviewsPage: React.FC = () => {
   // Загрузка курсов для формы
   const fetchCourses = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/courses");
+      const response = await fetch(`${API_BASE_URL}/courses`);
       const data = await response.json();
 
       if (data.success) {
@@ -106,7 +107,7 @@ const ReviewsPage: React.FC = () => {
   const handleSubmitReview = async (values: any, { resetForm }: any) => {
     try {
       setSubmitting(true);
-      const response = await fetch("http://localhost:3001/api/reviews/create", {
+      const response = await fetch(`${API_BASE_URL}/reviews/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +141,7 @@ const ReviewsPage: React.FC = () => {
   // Лайк отзыва
   const handleLike = async (reviewId: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/reviews/${reviewId}/like`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -253,7 +254,7 @@ const ReviewsPage: React.FC = () => {
                 {reviews.map((review) => (
                   <div key={review.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <Image src={`http://localhost:3001${review.avatar_url}`} alt={review.author_name} width={48} height={48} className="rounded-full object-cover" /> : <FaUser className="text-gray-500" />}</div>
+                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <Image src={`${SERVER_URL}${review.avatar_url}`} alt={review.author_name} width={48} height={48} className="rounded-full object-cover" /> : <FaUser className="text-gray-500" />}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-bold text-gray-800">{review.author_name}</h3>

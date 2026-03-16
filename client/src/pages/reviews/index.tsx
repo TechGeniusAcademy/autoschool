@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { TokenStorage } from "@/services/api";
+import { API_BASE_URL, SERVER_URL } from "@/constants/api";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 interface Review {
@@ -75,7 +76,7 @@ const ReviewsPage: React.FC = () => {
         params.append("rating", filterRating.toString());
       }
 
-      const url = `http://localhost:3001/api/reviews/public?${params.toString()}`;
+      const url = `${API_BASE_URL}/reviews/public?${params.toString()}`;
       const response = await fetch(url);
       const data = await response.json();
 
@@ -119,7 +120,7 @@ const ReviewsPage: React.FC = () => {
       setSubmitting(true);
       const token = TokenStorage.get();
 
-      const response = await fetch("http://localhost:3001/api/reviews/create", {
+      const response = await fetch(`${API_BASE_URL}/reviews/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,7 +161,7 @@ const ReviewsPage: React.FC = () => {
 
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/reviews/${reviewId}/like`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -287,7 +288,7 @@ const ReviewsPage: React.FC = () => {
                 {reviews.map((review) => (
                   <div key={review.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <img src={`http://localhost:3001${review.avatar_url}`} alt={review.display_name || review.author_name || "Пользователь"} className="w-12 h-12 rounded-full object-cover" /> : <span className="text-gray-500 text-xl">👤</span>}</div>
+                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <img src={`${SERVER_URL}${review.avatar_url}`} alt={review.display_name || review.author_name || "Пользователь"} className="w-12 h-12 rounded-full object-cover" /> : <span className="text-gray-500 text-xl">👤</span>}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-bold text-gray-800">{review.display_name || review.author_name || "Гость"}</h3>

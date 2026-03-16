@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../../components/layout/Layout";
 import TokenStorage from "../../../../utils/tokenStorage";
+import { API_BASE_URL } from "../../../../constants/api";
 import { ArrowLeft, Upload, Save, Eye, AlertCircle } from "lucide-react";
 
 interface CourseFormData {
@@ -58,7 +59,7 @@ const EditCourse: React.FC = () => {
       setInitialLoading(true);
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/courses/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -186,7 +187,7 @@ const EditCourse: React.FC = () => {
     try {
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/courses/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaEye, FaEyeSlash, FaCalendar, FaUser, FaTags, FaGlobe, FaSave, FaTimes } from "react-icons/fa";
+import { API_BASE_URL } from "@/constants/api";
 
 // Динамически загружаем ReactQuill для избежания проблем с SSR
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -86,7 +87,7 @@ const AdminBlogs: React.FC = () => {
         search: searchTerm,
       });
 
-      const response = await fetch(`http://localhost:3001/api/blog?${queryParams}`, {
+      const response = await fetch(`${API_BASE_URL}/blog?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -172,7 +173,7 @@ const AdminBlogs: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const url = editingPost ? `http://localhost:3001/api/blog/${editingPost.id}` : "http://localhost:3001/api/blog";
+      const url = editingPost ? `${API_BASE_URL}/blog/${editingPost.id}` : `${API_BASE_URL}/blog`;
 
       const method = editingPost ? "PUT" : "POST";
 
@@ -206,7 +207,7 @@ const AdminBlogs: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/api/blog/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

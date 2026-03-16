@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { API_BASE_URL } from "@/constants/api";
 
 // Динамически загружаем ReactQuill для избежания проблем с SSR
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -84,7 +85,7 @@ const AdminBlogManager: React.FC = () => {
   const fetchBlogPosts = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:3001/api/blog", {
+      const response = await fetch(`${API_BASE_URL}/blog`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -134,8 +135,8 @@ const AdminBlogManager: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       const url = editingPost
-        ? `http://localhost:3001/api/blog/${editingPost.id}`
-        : "http://localhost:3001/api/blog";
+        ? `${API_BASE_URL}/blog/${editingPost.id}`
+        : `${API_BASE_URL}/blog`;
 
       const method = editingPost ? "PUT" : "POST";
 
@@ -180,7 +181,7 @@ const AdminBlogManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:3001/api/blog/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

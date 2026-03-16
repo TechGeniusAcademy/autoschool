@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaUser, FaUsers } from "react-icons/fa";
 import { AdminAPI, User, Course } from "../../../services/api";
-import { getAvatarUrl } from "../../../constants/api";
+import { getAvatarUrl, API_BASE_URL } from "../../../constants/api";
 
 interface Student {
   id: number;
@@ -96,7 +96,7 @@ const AdminStudents: React.FC = () => {
     try {
       setLoadingGroups(true);
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/admin/groups", {
+      const response = await fetch(`${API_BASE_URL}/admin/groups`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -238,7 +238,7 @@ const AdminStudents: React.FC = () => {
     try {
       setError(null);
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/admin/groups/${groupId}/students`, {
+      const response = await fetch(`${API_BASE_URL}/admin/groups/${groupId}/students`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

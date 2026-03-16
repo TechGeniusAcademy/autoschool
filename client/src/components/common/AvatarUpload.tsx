@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { User, AvatarAPI } from "../../services/api";
 import { FaUser, FaCamera, FaSpinner } from "react-icons/fa";
+import { SERVER_URL } from "@/constants/api";
 
 interface AvatarUploadProps {
   user: User | null;
@@ -72,7 +73,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ user, onAvatarUpdate, size 
     if (user?.avatarUrl) {
       // Если URL начинается с /, добавляем базовый URL сервера
       if (user.avatarUrl.startsWith("/")) {
-        return `http://localhost:3001${user.avatarUrl}`;
+        return `${SERVER_URL}${user.avatarUrl}`;
       }
       return user.avatarUrl;
     }

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout/Layout";
 import TokenStorage from "../../../utils/tokenStorage";
 import { ArrowLeft, Upload, Save, Eye, AlertCircle } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface CourseFormData {
   title: string;
@@ -142,7 +143,7 @@ const CreateCourse: React.FC = () => {
         instructor_id: user?.id || 1,
       };
 
-      const response = await fetch("http://localhost:3001/api/courses", {
+      const response = await fetch(`${API_BASE_URL}/courses`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

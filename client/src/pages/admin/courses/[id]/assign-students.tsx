@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../../components/layout/Layout";
 import TokenStorage from "../../../../utils/tokenStorage";
+import { API_BASE_URL } from "../../../../constants/api";
 import { ArrowLeft, Search, UserPlus, Check, X } from "lucide-react";
 
 interface Student {
@@ -47,13 +48,13 @@ const AssignStudents: React.FC = () => {
 
       // Загружаем данные курса, всех студентов и уже назначенных студентов
       const [courseResponse, studentsResponse, assignedResponse] = await Promise.all([
-        fetch(`http://localhost:3001/api/courses/${id}`, {
+        fetch(`${API_BASE_URL}/courses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/api/admin/students", {
+        fetch(`${API_BASE_URL}/admin/students`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch(`http://localhost:3001/api/courses/${id}/students`, {
+        fetch(`${API_BASE_URL}/courses/${id}/students`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -90,7 +91,7 @@ const AssignStudents: React.FC = () => {
     try {
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/courses/${id}/assign-students`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${id}/assign-students`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -135,7 +136,7 @@ const AssignStudents: React.FC = () => {
     try {
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/courses/${id}/unassign-student/${studentId}`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${id}/unassign-student/${studentId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

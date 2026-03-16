@@ -4,6 +4,7 @@ import Layout from "../../components/layout/Layout";
 import TokenStorage from "../../utils/tokenStorage";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Book, Clock, Users, Star, Search, Filter, Play, Award, CheckCircle, ArrowRight } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Course {
   id: number;
@@ -78,7 +79,7 @@ const CoursesPage: React.FC = () => {
       }
 
       // Используем публичный эндпоинт для загрузки курсов
-      const response = await fetch(`http://localhost:3001/api/courses/public?${params}`, { headers });
+      const response = await fetch(`${API_BASE_URL}/courses/public?${params}`, { headers });
       const data = await response.json();
 
       if (data.success) {
@@ -103,7 +104,7 @@ const CoursesPage: React.FC = () => {
 
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch(`http://localhost:3001/api/courses/${courseId}/enroll`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/enroll`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

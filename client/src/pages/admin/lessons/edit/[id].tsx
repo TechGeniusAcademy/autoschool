@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../../components/layout/Layout";
 import TokenStorage from "../../../../utils/tokenStorage";
+import { API_BASE_URL } from "../../../../constants/api";
 import { ArrowLeft, Save, Eye, AlertCircle } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface LessonFormData {
   title: string;
@@ -55,7 +57,7 @@ const EditLessonPage: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch("http://localhost:3001/api/courses", {
+      const response = await fetch(`${API_BASE_URL}/courses`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,7 +77,7 @@ const EditLessonPage: React.FC = () => {
       setPageLoading(true);
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/lessons/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -149,7 +151,7 @@ const EditLessonPage: React.FC = () => {
     try {
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/lessons/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

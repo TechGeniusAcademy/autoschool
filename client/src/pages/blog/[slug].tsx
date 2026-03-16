@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Layout from "../../components/layout/Layout";
 import { Calendar, User, Eye, Tag, ArrowLeft, Share2 } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface BlogPost {
   id: number;
@@ -40,7 +41,7 @@ const BlogPostPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/blog/slug/${postSlug}`);
+      const response = await fetch(`${API_BASE_URL}/blog/slug/${postSlug}`);
       const data = await response.json();
 
       if (data.success) {

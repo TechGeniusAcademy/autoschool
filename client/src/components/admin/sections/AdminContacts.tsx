@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEnvelope, FaEnvelopeOpen, FaPhone, FaUser, FaCalendar, FaReply, FaTrash, FaSearch, FaFilter, FaEye, FaCheck, FaTimes, FaExclamationCircle } from "react-icons/fa";
+import { API_BASE_URL } from "@/constants/api";
 
 interface ContactMessage {
   id: number;
@@ -75,7 +76,7 @@ const AdminContacts: React.FC = () => {
         search: searchTerm,
       });
 
-      const response = await fetch(`http://localhost:3001/api/contact?${queryParams}`, {
+      const response = await fetch(`${API_BASE_URL}/contact?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -112,7 +113,7 @@ const AdminContacts: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch("http://localhost:3001/api/contact/stats", {
+      const response = await fetch(`${API_BASE_URL}/contact/stats`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -140,7 +141,7 @@ const AdminContacts: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/api/contact/${messageId}/read`, {
+      const response = await fetch(`${API_BASE_URL}/contact/${messageId}/read`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -167,7 +168,7 @@ const AdminContacts: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/api/contact/${messageId}`, {
+      const response = await fetch(`${API_BASE_URL}/contact/${messageId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -192,7 +193,7 @@ const AdminContacts: React.FC = () => {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/api/contact/${selectedMessage.id}/respond`, {
+      const response = await fetch(`${API_BASE_URL}/contact/${selectedMessage.id}/respond`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

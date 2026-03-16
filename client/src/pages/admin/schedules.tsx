@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../components/layout/Layout";
 import { adminAPI, authUtils } from "../../utils/apiUtils";
+import { API_BASE_URL } from "../../constants/api";
 
 interface Group {
   id: number;
@@ -149,7 +150,7 @@ const SchedulesManagement = () => {
   const loadStudents = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/admin/students", {
+      const response = await fetch(`${API_BASE_URL}/admin/students`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -168,7 +169,7 @@ const SchedulesManagement = () => {
 
   const loadInstructors = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/instructor/list");
+      const response = await fetch(`${API_BASE_URL}/instructor/list`);
       const data = await response.json();
 
       if (data.success && Array.isArray(data.data)) {
@@ -186,7 +187,7 @@ const SchedulesManagement = () => {
   const createSchedule = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/schedules", {
+      const response = await fetch(`${API_BASE_URL}/schedules`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -224,7 +225,7 @@ const SchedulesManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/schedules/${selectedSchedule.id}`, {
+      const response = await fetch(`${API_BASE_URL}/schedules/${selectedSchedule.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -259,7 +260,7 @@ const SchedulesManagement = () => {
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/schedules/${scheduleId}`, {
+      const response = await fetch(`${API_BASE_URL}/schedules/${scheduleId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -279,7 +280,7 @@ const SchedulesManagement = () => {
   const createIndividualLesson = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch("http://localhost:3001/api/schedules/individual", {
+      const response = await fetch(`${API_BASE_URL}/schedules/individual`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -317,7 +318,7 @@ const SchedulesManagement = () => {
   const updateLessonStatus = async (lessonId: number, status: string) => {
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/schedules/individual/${lessonId}`, {
+      const response = await fetch(`${API_BASE_URL}/schedules/individual/${lessonId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

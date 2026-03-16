@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Review {
   id: number;
@@ -61,7 +62,7 @@ const ReviewsPage: React.FC = () => {
         params.append("rating", filterRating.toString());
       }
 
-      const url = `http://localhost:3001/api/reviews/public?${params.toString()}`;
+      const url = `${API_BASE_URL}/reviews/public?${params.toString()}`;
       const response = await fetch(url);
       const data = await response.json();
 
@@ -100,7 +101,7 @@ const ReviewsPage: React.FC = () => {
   const handleSubmitReview = async (values: any, { resetForm }: any) => {
     try {
       setSubmitting(true);
-      const response = await fetch("http://localhost:3001/api/reviews/create", {
+      const response = await fetch(`${API_BASE_URL}/reviews/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const ReviewsPage: React.FC = () => {
   // Лайк отзыва
   const handleLike = async (reviewId: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/reviews/${reviewId}/like`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

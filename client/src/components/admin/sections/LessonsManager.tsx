@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { API_BASE_URL } from "../../../constants/api";
 import { FaPlus, FaEdit, FaTrash, FaArrowUp, FaArrowDown, FaVideo, FaFileAlt, FaQuestionCircle, FaTimes } from "react-icons/fa";
 
 // Динамически загружаем React Quill для избежания проблем с SSR
@@ -69,7 +70,7 @@ const LessonsManager: React.FC<LessonsManagerProps> = ({ courseId, courseName, i
     try {
       setLoading(true);
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/courses/${courseId}/lessons`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -148,7 +149,7 @@ const LessonsManager: React.FC<LessonsManagerProps> = ({ courseId, courseName, i
     try {
       setSubmitting(true);
       const token = localStorage.getItem("auth_token");
-      const url = editingLesson ? `http://localhost:3001/api/courses/${courseId}/lessons/${editingLesson.id}` : `http://localhost:3001/api/courses/${courseId}/lessons`;
+      const url = editingLesson ? `${API_BASE_URL}/courses/${courseId}/lessons/${editingLesson.id}` : `${API_BASE_URL}/courses/${courseId}/lessons`;
 
       const method = editingLesson ? "PUT" : "POST";
 
@@ -181,7 +182,7 @@ const LessonsManager: React.FC<LessonsManagerProps> = ({ courseId, courseName, i
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/courses/${courseId}/lessons/${lessonId}`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons/${lessonId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -217,7 +218,7 @@ const LessonsManager: React.FC<LessonsManagerProps> = ({ courseId, courseName, i
 
     try {
       const token = localStorage.getItem("auth_token");
-      const response = await fetch(`http://localhost:3001/api/courses/${courseId}/lessons/reorder`, {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons/reorder`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

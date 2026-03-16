@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaEye, FaEyeSlash, FaArrowLeft, FaCalendar, FaUser, FaTags, FaGlobe } from "react-icons/fa";
 import { TokenStorage } from "../../../services/api";
+import { API_BASE_URL } from "@/constants/api";
 
 interface BlogPost {
   id: number;
@@ -62,7 +63,7 @@ const AdminBlogPage: React.FC = () => {
       if (searchTerm) params.append("search", searchTerm);
       if (statusFilter !== "all") params.append("status", statusFilter);
 
-      const response = await fetch(`http://localhost:3001/api/blog?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/blog?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -86,7 +87,7 @@ const AdminBlogPage: React.FC = () => {
   const handleDelete = async (post: BlogPost) => {
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/blog/${post.id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${post.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,7 +107,7 @@ const AdminBlogPage: React.FC = () => {
   const handleStatusChange = async (post: BlogPost, newStatus: "draft" | "published" | "archived") => {
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/blog/${post.id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${post.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

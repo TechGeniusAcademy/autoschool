@@ -5,6 +5,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import Image from "next/image";
 import Link from "next/link";
 import { FaClock, FaUsers, FaGraduationCap, FaDesktop, FaCalendarAlt, FaMoneyBillWave, FaPlay, FaLock, FaCheck, FaStar, FaFileAlt, FaVideo } from "react-icons/fa";
+import { API_BASE_URL } from "@/constants/api";
 
 // Типы данных для курса
 interface Lesson {
@@ -57,7 +58,7 @@ const CourseDetailPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/courses/public/${slug}`);
+      const response = await fetch(`${API_BASE_URL}/courses/public/${slug}`);
       const data = await response.json();
 
       if (data.success) {

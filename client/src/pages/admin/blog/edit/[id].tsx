@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { FaArrowLeft, FaSave, FaEye, FaSpinner } from "react-icons/fa";
 import { TokenStorage } from "../../../../services/api";
+import { API_BASE_URL } from "@/constants/api";
 
 // Динамический импорт React Quill для избежания SSR проблем
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -76,7 +77,7 @@ const EditBlogPost: React.FC = () => {
   const fetchPost = async () => {
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/blog/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -158,7 +159,7 @@ const EditBlogPost: React.FC = () => {
 
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/blog/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

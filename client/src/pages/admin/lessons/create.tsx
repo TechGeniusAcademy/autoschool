@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout/Layout";
 import TokenStorage from "../../../utils/tokenStorage";
 import { ArrowLeft, Upload, Save, Eye, AlertCircle, Plus, Trash2 } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface LessonFormData {
   title: string;
@@ -66,7 +67,7 @@ const CreateLesson: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch("http://localhost:3001/api/courses", {
+      const response = await fetch(`${API_BASE_URL}/courses`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -228,7 +229,7 @@ const CreateLesson: React.FC = () => {
         is_preview: formData.is_free,
       };
 
-      const lessonResponse = await fetch("http://localhost:3001/api/lessons", {
+      const lessonResponse = await fetch(`${API_BASE_URL}/lessons`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -255,7 +256,7 @@ const CreateLesson: React.FC = () => {
       // Создание вопросов теста (если есть)
       if (formData.content_type === "quiz" && testQuestions.length > 0) {
         for (const question of testQuestions) {
-          const testResponse = await fetch("http://localhost:3001/api/tests", {
+          const testResponse = await fetch(`${API_BASE_URL}/tests`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AdminAPI } from "../../services/api";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { FaCar, FaMotorcycle, FaTruck, FaBus, FaTrailer, FaCheck, FaTimes, FaInfoCircle, FaPercent, FaWhatsapp, FaPhone, FaEnvelope } from "react-icons/fa";
+import { API_BASE_URL } from "@/constants/api";
 
 // Модальное окно для WhatsApp
 const WhatsAppModal: React.FC<{
@@ -235,7 +236,7 @@ const PricesPage: React.FC = () => {
         setLoading(true);
 
         // Используем публичный API
-        const response = await fetch("http://localhost:3001/api/admin/prices/public");
+        const response = await fetch(`${API_BASE_URL}/admin/prices/public`);
         const data = await response.json();
 
         console.log("API response:", data);

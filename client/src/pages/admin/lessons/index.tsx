@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout/Layout";
 import TokenStorage from "../../../utils/tokenStorage";
 import { Plus, Search, Filter, Book, Video, FileText, Tv, Award, Edit, Trash2, Eye, Clock, CheckCircle, XCircle } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Lesson {
   id: number;
@@ -59,7 +60,7 @@ const LessonsManagement: React.FC = () => {
       if (publishedFilter) params.append("published", publishedFilter);
       if (courseFilter) params.append("course", courseFilter);
 
-      const response = await fetch(`http://localhost:3001/api/lessons?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -94,7 +95,7 @@ const LessonsManagement: React.FC = () => {
   const handleDeleteLesson = async (lessonId: number, lessonTitle: string) => {
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch(`http://localhost:3001/api/lessons/${lessonId}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons/${lessonId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

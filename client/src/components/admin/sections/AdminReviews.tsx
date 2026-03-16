@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TokenStorage } from "../../../services/api";
+import { API_BASE_URL, SERVER_URL } from "../../../constants/api";
 import { FaStar, FaCheck, FaTimes, FaTrash, FaEye, FaFilter, FaSort, FaUser, FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
 
 interface Review {
@@ -54,7 +55,7 @@ const AdminReviews: React.FC = () => {
       params.append("status", filter);
       params.append("sort", sort);
 
-      const url = `http://localhost:3001/api/reviews/admin/all?${params.toString()}`;
+      const url = `${API_BASE_URL}/reviews/admin/all?${params.toString()}`;
 
       const response = await fetch(url, {
         headers: {
@@ -86,7 +87,7 @@ const AdminReviews: React.FC = () => {
   const updateReviewStatus = async (reviewId: number, isApproved: boolean) => {
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/reviews/admin/${reviewId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/admin/${reviewId}/status`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -116,7 +117,7 @@ const AdminReviews: React.FC = () => {
 
     try {
       const token = TokenStorage.get();
-      const response = await fetch(`http://localhost:3001/api/reviews/admin/${reviewId}`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/admin/${reviewId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -269,7 +270,7 @@ const AdminReviews: React.FC = () => {
             <div key={review.id} className="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <img src={`http://localhost:3001${review.avatar_url}`} alt={review.display_name || review.user_full_name || review.author_name || "Пользователь"} className="w-10 h-10 rounded-full object-cover" /> : <FaUser className="text-gray-500 text-sm" />}</div>
+                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">{review.avatar_url ? <img src={`${SERVER_URL}${review.avatar_url}`} alt={review.display_name || review.user_full_name || review.author_name || "Пользователь"} className="w-10 h-10 rounded-full object-cover" /> : <FaUser className="text-gray-500 text-sm" />}</div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-medium text-gray-800">{review.display_name || review.user_full_name || review.author_name || "Гость"}</h3>

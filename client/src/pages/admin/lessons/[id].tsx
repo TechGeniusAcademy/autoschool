@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout/Layout";
 import TokenStorage from "../../../utils/tokenStorage";
 import { ArrowLeft, Edit, Trash2, Book, Video, FileText, TestTube, Clock, Eye, EyeOff, Calendar, User } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Lesson {
   id: number;
@@ -40,7 +41,7 @@ const LessonDetailPage: React.FC = () => {
       setLoading(true);
       const token = TokenStorage.getToken();
 
-      const response = await fetch(`http://localhost:3001/api/lessons/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -72,7 +73,7 @@ const LessonDetailPage: React.FC = () => {
 
     try {
       const token = TokenStorage.getToken();
-      const response = await fetch(`http://localhost:3001/api/lessons/${lesson.id}`, {
+      const response = await fetch(`${API_BASE_URL}/lessons/${lesson.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

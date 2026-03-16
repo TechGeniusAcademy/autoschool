@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
 import { Calendar, User, Eye, Tag, Search, Filter } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface BlogPost {
   id: number;
@@ -55,7 +56,7 @@ const BlogPage: React.FC = () => {
 
       if (searchTerm) params.append("search", searchTerm);
 
-      const response = await fetch(`http://localhost:3001/api/blog/published?${params}`);
+      const response = await fetch(`${API_BASE_URL}/blog/published?${params}`);
       const data = await response.json();
 
       if (data.success) {

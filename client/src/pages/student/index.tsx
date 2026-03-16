@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/layout/Layout";
 import TokenStorage from "../../utils/tokenStorage";
 import { Book, Play, Clock, Award, TrendingUp, Calendar, CheckCircle, Users, Star, ArrowRight } from "lucide-react";
+import { API_BASE_URL } from "@/constants/api";
 
 interface EnrolledCourse {
   id: number;
@@ -57,13 +58,13 @@ const StudentDashboard: React.FC = () => {
       const token = TokenStorage.getToken();
 
       const [coursesResponse, activityResponse, lessonsResponse] = await Promise.all([
-        fetch("http://localhost:3001/api/courses/student/enrolled", {
+        fetch(`${API_BASE_URL}/courses/student/enrolled`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/api/students/activity", {
+        fetch(`${API_BASE_URL}/students/activity`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/api/students/upcoming-lessons", {
+        fetch(`${API_BASE_URL}/students/upcoming-lessons`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);

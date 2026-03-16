@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
+import { API_BASE_URL } from "@/constants/api";
 
 interface Review {
   id: number;
@@ -29,7 +30,7 @@ const ReviewsPage: React.FC = () => {
       setLoading(true);
       console.log("Fetching reviews...");
 
-      const response = await fetch("http://localhost:3001/api/reviews/public");
+      const response = await fetch(`${API_BASE_URL}/reviews/public`);
       console.log("Response status:", response.status);
 
       const data = await response.json();
