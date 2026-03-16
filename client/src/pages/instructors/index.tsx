@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import Image from "next/image";
 import { TokenStorage } from "@/services/api";
+import { API_BASE_URL } from "@/constants/api";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FaStar, FaGraduationCap, FaCar, FaMotorcycle, FaTruck, FaBus } from "react-icons/fa";
 
@@ -52,7 +53,7 @@ const InstructorsPage: React.FC = () => {
   const fetchInstructors = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/instructor/list");
+      const response = await fetch(`${API_BASE_URL}/instructor/list`);
       const data = await response.json();
 
       if (data.success) {
