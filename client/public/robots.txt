@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Разрешаем индексировать основные страницы
+Allow: /courses
+Allow: /instructors
+Allow: /prices
+Allow: /reviews
+Allow: /blog
+Allow: /about
+Allow: /contact
+
+# Запрещаем индексировать админские страницы
+Disallow: /admin/
+Disallow: /api/
+
+# Запрещаем индексировать служебные Next.js файлы
+Disallow: /_next/
+
+# Указываем расположение sitemap
+Sitemap: https://tld-autoschool.kz/sitemap.xml

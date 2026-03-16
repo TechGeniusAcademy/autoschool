@@ -1,0 +1,688 @@
+import React, { useState, useEffect } from "react";
+import Layout from "@/components/layout/Layout";
+import Image from "next/image";
+import {
+  FaStar,
+  FaThumbsUp,
+  FaComment,
+  FaFilter,
+  FaSortAmountDown,
+  FaSortAmountUpAlt,
+  FaUser,
+} from "react-icons/fa";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+interface Review {
+  id: number;
+  user_id: number;
+  course_id?: number;
+  author_name: string;
+  author_email: string;
+  author_phone?: string;
+  rating: number;
+  comment: string;
+  is_verified: boolean;
+  is_approved: boolean;
+  likes_count: number;
+  replies_count: number;
+  created_at: string;
+  updated_at: string;
+  course_title?: string;
+  avatar_url?: string;
+}
+
+const ReviewsPage: React.FC = () => {
+  const [sortOrder, setSortOrder] = useState<
+    "newest" | "oldest" | "highest" | "lowest"
+  >("newest");
+  const [filterRating, setFilterRating] = useState<number | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([
+    {
+      id: 1,
+      authorName: "Анна Иванова",
+      authorPhoto: "/images/testimonial-1.jpg",
+      date: "15.03.2023",
+      rating: 5,
+      course: "Категория B",
+      comment:
+        "Отличная автошкола! Инструкторы очень терпеливые и внимательные. Я сдала экзамен с первого раза и очень благодарна за качественное обучение! Особенно хочу отметить инструктора Алексея Сидорова, который помог мне преодолеть страх вождения в городе.",
+      likes: 24,
+      replies: 2,
+      verified: true,
+    },
+    {
+      id: 2,
+      authorName: "Иван Петров",
+      authorPhoto: "/images/testimonial-2.jpg",
+      date: "02.02.2023",
+      rating: 5,
+      course: "Категория C",
+      comment:
+        "Учился в этой автошколе на категорию C. Очень понравился формат обучения, удобное расписание и профессиональный подход к делу. Инструктор отлично объяснил особенности управления грузовым автомобилем. Рекомендую всем!",
+      likes: 18,
+      verified: true,
+    },
+    {
+      id: 3,
+      authorName: "Максим Сидоров",
+      authorPhoto: "/images/testimonial-3.jpg",
+      date: "10.01.2023",
+      rating: 4,
+      course: "Категория A",
+      comment:
+        "Проходил обучение на категорию А. Отличные преподаватели, современные мотоциклы и хорошая атмосфера. Сдал экзамен без проблем. Единственный минус - немного не хватило практики в плохих погодных условиях.",
+      likes: 9,
+      replies: 1,
+      verified: true,
+    },
+    {
+      id: 4,
+      authorName: "Елена Смирнова",
+      authorPhoto: "/images/testimonial-4.jpg",
+      date: "05.12.2022",
+      rating: 5,
+      course: "Категория B",
+      comment:
+        "Очень удобно, что есть возможность проходить теорию онлайн. Практика тоже на высоте - инструкторы профессионалы своего дела. Особенно понравились дополнительные материалы по теории, которые дают в автошколе.",
+      likes: 15,
+      verified: true,
+    },
+    {
+      id: 5,
+      authorName: "Дмитрий Козлов",
+      authorPhoto: "/images/testimonial-5.jpg",
+      date: "20.11.2022",
+      rating: 5,
+      course: "Категория D",
+      comment:
+        "Отличная организация учебного процесса, современные автобусы, вежливый персонал. Всем рекомендую эту автошколу. После обучения сразу устроился на работу в автобусный парк.",
+      likes: 21,
+      verified: true,
+    },
+    {
+      id: 6,
+      authorName: "Алексей Николаев",
+      authorPhoto: "/images/testimonial-6.jpg",
+      date: "15.10.2022",
+      rating: 4,
+      course: "Категория B",
+      comment:
+        "Обучался на категорию B. Понравился индивидуальный подход к обучению и гибкий график. Сдал экзамены с первого раза. Немного не хватило практики вождения в темное время суток.",
+      likes: 12,
+      verified: true,
+    },
+    {
+      id: 7,
+      authorName: "Ольга Федорова",
+      authorPhoto: "/images/testimonial-7.jpg",
+      date: "03.09.2022",
+      rating: 3,
+      course: "Категория B",
+      comment:
+        "В целом обучение прошло хорошо, но были некоторые организационные моменты, которые можно улучшить. Инструктор иногда опаздывал на занятия. Теория преподается на хорошем уровне.",
+      likes: 5,
+      verified: true,
+    },
+    {
+      id: 8,
+      authorName: "Сергей Морозов",
+      authorPhoto: "/images/testimonial-8.jpg",
+      date: "15.08.2022",
+      rating: 5,
+      course: "Категория B, C",
+      comment:
+        "Прошел обучение сразу на две категории. Отличные инструкторы, современный автопарк, удобное расположение. Особенно понравилось, что можно было выбирать время для практических занятий. Рекомендую!",
+      likes: 28,
+      replies: 3,
+      verified: true,
+    },
+  ]);
+
+  // Функция добавления нового отзыва
+  const addReview = (values: any, { resetForm }: any) => {
+    const newReview: Review = {
+      id: reviews.length + 1,
+      authorName: values.name,
+      authorPhoto: "/images/default-user.jpg", // Дефолтное фото для новых отзывов
+      date: new Date().toLocaleDateString("ru-RU"),
+      rating: values.rating,
+      course: values.course,
+      comment: values.comment,
+      likes: 0,
+      verified: false,
+    };
+
+    setReviews([newReview, ...reviews]);
+    resetForm();
+    alert("Спасибо за ваш отзыв! После модерации он будет опубликован.");
+  };
+
+  // Функция лайка отзыва
+  const likeReview = (id: number) => {
+    setReviews(
+      reviews.map((review) =>
+        review.id === id ? { ...review, likes: review.likes + 1 } : review
+      )
+    );
+  };
+
+  // Сортировка отзывов
+  const sortedReviews = [...reviews].sort((a, b) => {
+    switch (sortOrder) {
+      case "newest":
+        return (
+          new Date(b.date.split(".").reverse().join("-")).getTime() -
+          new Date(a.date.split(".").reverse().join("-")).getTime()
+        );
+      case "oldest":
+        return (
+          new Date(a.date.split(".").reverse().join("-")).getTime() -
+          new Date(b.date.split(".").reverse().join("-")).getTime()
+        );
+      case "highest":
+        return b.rating - a.rating;
+      case "lowest":
+        return a.rating - b.rating;
+      default:
+        return 0;
+    }
+  });
+
+  // Фильтрация отзывов по рейтингу
+  const filteredReviews = filterRating
+    ? sortedReviews.filter((review) => review.rating === filterRating)
+    : sortedReviews;
+
+  // Валидация формы отзыва
+  const reviewSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, "Слишком короткое имя")
+      .max(50, "Слишком длинное имя")
+      .required("Обязательное поле"),
+    email: Yup.string()
+      .email("Неверный формат email")
+      .required("Обязательное поле"),
+    course: Yup.string().required("Выберите курс"),
+    rating: Yup.number()
+      .min(1, "Выберите оценку")
+      .max(5, "Выберите оценку")
+      .required("Выберите оценку"),
+    comment: Yup.string()
+      .min(10, "Отзыв должен содержать не менее 10 символов")
+      .max(1000, "Отзыв слишком длинный")
+      .required("Обязательное поле"),
+    agreement: Yup.boolean()
+      .oneOf([true], "Необходимо согласие с условиями")
+      .required("Обязательное поле"),
+  });
+
+  // Расчет средней оценки
+  const averageRating =
+    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+
+  // Расчет количества отзывов по каждой оценке
+  const ratingCounts = [5, 4, 3, 2, 1].map((rating) => ({
+    rating,
+    count: reviews.filter((review) => review.rating === rating).length,
+    percentage: Math.round(
+      (reviews.filter((review) => review.rating === rating).length /
+        reviews.length) *
+        100
+    ),
+  }));
+
+  return (
+    <Layout
+      title="Отзывы об автошколе - мнения наших учеников"
+      description="Отзывы учеников автошколы. Узнайте, что говорят ученики о качестве обучения, инструкторах и организации учебного процесса."
+    >
+      <div className="bg-gray-100 py-12">
+        <div className="container-fluid">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+            Отзывы о нашей автошколе
+          </h1>
+          <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
+            Здесь собраны отзывы наших учеников о качестве обучения,
+            инструкторах и организации учебного процесса. Мы ценим каждое мнение
+            и постоянно работаем над улучшением нашей автошколы.
+          </p>
+
+          {/* Статистика отзывов */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl font-bold mb-4">Рейтинг автошколы</h2>
+                <div className="flex items-center mb-4">
+                  <div className="mr-4">
+                    <span className="text-4xl font-bold">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-gray-500">/5</span>
+                  </div>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={`${
+                          i < Math.round(averageRating)
+                            ? "text-yellow-400"
+                            : "text-gray-300"
+                        } text-2xl`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  Основано на {reviews.length} отзывах
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-4">
+                  Распределение оценок
+                </h3>
+                <div className="space-y-2">
+                  {ratingCounts.map((item) => (
+                    <div key={item.rating} className="flex items-center">
+                      <div className="w-16 flex items-center">
+                        <span className="mr-1">{item.rating}</span>
+                        <FaStar className="text-yellow-400 text-sm" />
+                      </div>
+                      <div className="w-full h-4 bg-gray-200 rounded-full mx-2">
+                        <div
+                          className="h-4 bg-green-500 rounded-full"
+                          style={{ width: `${item.percentage}%` }}
+                        ></div>
+                      </div>
+                      <div className="w-16 text-right text-sm text-gray-500">
+                        {item.count} ({item.percentage}%)
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Фильтры и сортировка */}
+          <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+              <div className="flex items-center mb-4 md:mb-0">
+                <FaFilter className="text-gray-500 mr-2" />
+                <h2 className="text-lg font-semibold">Фильтры</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:flex">
+                <div className="mr-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Оценка
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setFilterRating(null)}
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        filterRating === null
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      Все
+                    </button>
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                      <button
+                        key={rating}
+                        onClick={() => setFilterRating(rating)}
+                        className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                          filterRating === rating
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-800"
+                        }`}
+                      >
+                        {rating}{" "}
+                        <FaStar
+                          className={`ml-1 ${
+                            filterRating === rating
+                              ? "text-white"
+                              : "text-yellow-400"
+                          }`}
+                          size={10}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Сортировка
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setSortOrder("newest")}
+                      className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                        sortOrder === "newest"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      Новые <FaSortAmountDown className="ml-1" size={10} />
+                    </button>
+                    <button
+                      onClick={() => setSortOrder("oldest")}
+                      className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                        sortOrder === "oldest"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      Старые <FaSortAmountUpAlt className="ml-1" size={10} />
+                    </button>
+                    <button
+                      onClick={() => setSortOrder("highest")}
+                      className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                        sortOrder === "highest"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      Высокий рейтинг
+                    </button>
+                    <button
+                      onClick={() => setSortOrder("lowest")}
+                      className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                        sortOrder === "lowest"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      Низкий рейтинг
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Список отзывов */}
+          <div className="space-y-6 mb-12">
+            {filteredReviews.length > 0 ? (
+              filteredReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="bg-white rounded-lg shadow-md p-6"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-start">
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
+                        {/* ПРИМЕЧАНИЕ: Для каждого отзыва необходимо добавить фото автора, рекомендуемое разрешение 96x96px */}
+                        <Image
+                          src={review.authorPhoto}
+                          alt={review.authorName}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center">
+                          <h3 className="font-bold">{review.authorName}</h3>
+                          {review.verified && (
+                            <span className="ml-2 bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                              Проверено
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-500">
+                          Курс: {review.course}
+                        </p>
+                        <div className="flex items-center mt-1">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <FaStar
+                                key={i}
+                                className={`${
+                                  i < review.rating
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                } text-sm`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-500 ml-2">
+                            {review.date}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-gray-700">{review.comment}</p>
+                  </div>
+
+                  <div className="mt-4 flex items-center text-sm text-gray-500">
+                    <button
+                      onClick={() => likeReview(review.id)}
+                      className="flex items-center hover:text-blue-600 transition-colors"
+                    >
+                      <FaThumbsUp className="mr-1" />
+                      <span>{review.likes} полезно</span>
+                    </button>
+                    {review.replies && (
+                      <div className="ml-6 flex items-center">
+                        <FaComment className="mr-1" />
+                        <span>
+                          {review.replies}{" "}
+                          {review.replies === 1 ? "ответ" : "ответов"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-12 bg-white rounded-lg shadow-md">
+                <h3 className="text-xl font-bold mb-2">Отзывы не найдены</h3>
+                <p className="text-gray-600">Попробуйте изменить фильтры</p>
+                <button
+                  className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+                  onClick={() => setFilterRating(null)}
+                >
+                  Сбросить фильтры
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Форма добавления отзыва */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold mb-6">Оставить отзыв</h2>
+
+            <Formik
+              initialValues={{
+                name: "",
+                email: "",
+                course: "",
+                rating: 0,
+                comment: "",
+                agreement: false,
+              }}
+              validationSchema={reviewSchema}
+              onSubmit={addReview}
+            >
+              {({ values, setFieldValue, errors, touched }) => (
+                <Form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className="block text-gray-700 font-medium mb-2"
+                      >
+                        Ваше имя
+                      </label>
+                      <Field
+                        type="text"
+                        id="name"
+                        name="name"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        placeholder="Иван Иванов"
+                      />
+                      <ErrorMessage
+                        name="name"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block text-gray-700 font-medium mb-2"
+                      >
+                        Email
+                      </label>
+                      <Field
+                        type="email"
+                        id="email"
+                        name="email"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        placeholder="example@mail.ru"
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="course"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Курс
+                    </label>
+                    <Field
+                      as="select"
+                      id="course"
+                      name="course"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    >
+                      <option value="">Выберите курс</option>
+                      <option value="Категория A">
+                        Категория A - Мотоциклы
+                      </option>
+                      <option value="Категория B">
+                        Категория B - Легковые автомобили
+                      </option>
+                      <option value="Категория C">
+                        Категория C - Грузовые автомобили
+                      </option>
+                      <option value="Категория D">
+                        Категория D - Автобусы
+                      </option>
+                      <option value="Категория E">Категория E - Прицепы</option>
+                    </Field>
+                    <ErrorMessage
+                      name="course"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Оценка
+                    </label>
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setFieldValue("rating", star)}
+                          className="text-2xl focus:outline-none"
+                        >
+                          <FaStar
+                            className={`${
+                              star <= values.rating
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            } cursor-pointer`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    {errors.rating && touched.rating && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {errors.rating}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="comment"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Ваш отзыв
+                    </label>
+                    <Field
+                      as="textarea"
+                      id="comment"
+                      name="comment"
+                      rows={4}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200"
+                      placeholder="Расскажите о вашем опыте обучения в автошколе"
+                    />
+                    <ErrorMessage
+                      name="comment"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <Field
+                        type="checkbox"
+                        id="agreement"
+                        name="agreement"
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="ml-3 text-sm">
+                      <label htmlFor="agreement" className="text-gray-600">
+                        Я согласен с{" "}
+                        <a
+                          href="/Privacy"
+                          className="text-blue-600 hover:underline"
+                        >
+                          политикой конфиденциальности
+                        </a>{" "}
+                        и даю согласие на обработку персональных данных
+                      </label>
+                      <ErrorMessage
+                        name="agreement"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  >
+                    Отправить отзыв
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default ReviewsPage;

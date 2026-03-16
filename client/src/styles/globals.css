@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  background: rgb(var(--background-rgb));
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Исправление видимости опций в селектах */
+select option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  display: block !important;
+  padding: 8px 12px !important;
+  border: none !important;
+  outline: none !important;
+  font-weight: normal !important;
+}
+
+select[name="instructor_id"] option,
+select[name="student_id"] option,
+select[name="group_id"] option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  display: block !important;
+  padding: 8px 12px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: none !important;
+  outline: none !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+}
+
+/* Дополнительные стили для исправления видимости */
+select[name="instructor_id"] option:hover,
+select[name="student_id"] option:hover,
+select[name="group_id"] option:hover {
+  background-color: #e5e7eb !important;
+  color: #000000 !important;
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 640px) {
+  .container-fluid {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-fluid {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-fluid {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-fluid {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container-fluid {
+    max-width: 1736px;
+  }
+}
