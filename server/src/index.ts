@@ -34,8 +34,8 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:5000',
       'http://192.168.8.17:5000',
-      'https://tld-autoschool.kz',
-      'http://tld-autoschool.kz',
+      'https://tdk-autoschool.kz',
+      'http://tdk-autoschool.kz',
       'http://51.68.129.249',
       'http://51.68.129.249:5000',
     ];

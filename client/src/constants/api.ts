@@ -5,8 +5,8 @@ const config = {
     API_BASE_URL: 'http://localhost:3001/api',
   },
   production: {
-    SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://tld-autoschool.kz',
-    API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://tld-autoschool.kz/api',
+    SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://tdk-autoschool.kz',
+    API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://tdk-autoschool.kz/api',
   }
 };
 
